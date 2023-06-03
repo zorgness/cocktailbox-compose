@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">MyComposeSkeleton</string>
+
+    <!--ERROR_NETWORK-->
+    <string name="error_server">erreur serveur</string>
+    <string name="error_authorization">probléme d\'autorisation</string>
+    <string name="error_connection">pas de connection</string>
+    <string name="error_param">probléme de paramétres</string>
+    <string name="error_service">service indisponible</string>
+
+    <!--LOGIN REGISTER-->
+    <string name="wrong_credentials">mauvais login ou mot de passe</string>
+    <string name="empty_fields">tous les champs doivent être remplis</string>
+    <string name="error_confirmation">mot de passe différent de confirmation</string>
+    <string name="account_failed">nouveau compte non créé</string>
+    <string name="account_success">nouveau compte ajouté</string>
+    <string name="login_used">login déjà utilisé</string>
+    <string name="security_failure">probléme de sécurité, déconnectez-vous!!!</string>
+
+    <string name="new_account">Nouveau compte</string>
+    <string name="log_to_account">Connectez-vous</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="username">Nom d\'utilisateur</string>
+    <string name="login_success">Bienvenue</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirmation Password</string>
+    <string name="btn_register">S\'inscrire</string>
+    <string name="no_account_yet">Pas de compte ? inscrivez-vous !</string>
+    <string name="connect">Se connecter</string>
+
 </resources>

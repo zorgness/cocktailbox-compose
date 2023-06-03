@@ -20,7 +20,7 @@ data class SessionDto(
     @Json(name = "status")
     val status: Int,
     @Json(name = "id")
-    val id: Int,
+    val id: Long,
 )
 
 data class UpdateDto(
@@ -31,7 +31,7 @@ data class UpdateDto(
 
 data class UserDto(
     @Json(name = "id")
-    val id: Int,
+    val id: Long,
     @Json(name = "email")
     val email: String,
     @Json(name = "username")

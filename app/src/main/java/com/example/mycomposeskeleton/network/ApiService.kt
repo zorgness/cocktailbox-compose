@@ -1,4 +1,4 @@
-package com.example.mycomposeskeleton.dagger
+package com.example.mycomposeskeleton.network
 
 import com.example.mycomposeskeleton.network.ApiRoutes
 import com.example.mycomposeskeleton.network.dto.*
@@ -9,7 +9,7 @@ interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST(ApiRoutes.REGISTER)
-    suspend fun register(@Body registerInfo: RegisterDto): Response<UserDto>?
+    suspend fun register(@Body registerInfo: RegisterDto): Response<SessionDto>?
 
     @Headers("Content-Type: application/json")
     @POST(ApiRoutes.LOGIN)
