@@ -5,11 +5,12 @@ import ERROR_503
 import HTTP_200
 import HTTP_303
 import HTTP_304
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mycomposeskeleton.network.ApiService
 import com.example.mycomposeskeleton.network.dto.RegisterDto
-import com.example.mycomposeskeleton.service.MySharedPref
+import com.example.mycomposeskeleton.network.dto.UserDto
 import com.example.mycomposeskeleton.utils.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,12 +20,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val apiService: ApiService,
-    private val sharedPref: MySharedPref
+    private val context: Context,
 ): ViewModel() {
 
     enum class RegisterState(val httpStatus: Int?) {
@@ -63,11 +65,11 @@ class RegisterViewModel @Inject constructor(
     private val _registerStateSharedFlow = MutableSharedFlow<RegisterState>()
     val registerStateSharedFlow = _registerStateSharedFlow.asSharedFlow()
 
-    private val _goToMainSharedFlow = MutableSharedFlow<Screen>()
-    val goToMainSharedFlow = _goToMainSharedFlow.asSharedFlow()
+    private val _goToLoginSharedFlow = MutableSharedFlow<Screen>()
+    val goToLoginSharedFlow = _goToLoginSharedFlow.asSharedFlow()
+
 
     private var currentState: RegisterState? = null
-
 
     fun updateEmail(email: String) {
         _emailStateFlow.value = email
@@ -82,6 +84,8 @@ class RegisterViewModel @Inject constructor(
         _confirmStateFlow.value = confirm
     }
 
+
+
     fun register() {
         viewModelScope.launch {
             if (
@@ -93,7 +97,7 @@ class RegisterViewModel @Inject constructor(
 
                     try {
                         withContext(Dispatchers.IO) {
-                            val responseRegister = apiService.register(
+                            val responseRegister: Response<UserDto>? = apiService.register(
                                 RegisterDto(
                                     email = emailStateFlow.value,
                                     username = usernameStateFlow.value,
@@ -109,9 +113,8 @@ class RegisterViewModel @Inject constructor(
 
                                 responseRegister.isSuccessful && (body != null) -> {
                                         currentState = RegisterState.SUCCESS
-                                        sharedPref.token = body.token
-                                        sharedPref.userId = body.id
-                                        _goToMainSharedFlow.emit(Screen.Main)
+
+                                        _goToLoginSharedFlow.emit(Screen.Login)
                                 }
 
                                 else -> {
@@ -136,4 +139,7 @@ class RegisterViewModel @Inject constructor(
             }
         }
     }
+
+
+
 }

@@ -9,7 +9,7 @@ interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST(ApiRoutes.REGISTER)
-    suspend fun register(@Body registerInfo: RegisterDto): Response<SessionDto>?
+    suspend fun register(@Body registerInfo: RegisterDto): Response<UserDto>?
 
     @Headers("Content-Type: application/json")
     @POST(ApiRoutes.LOGIN)

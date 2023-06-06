@@ -33,7 +33,7 @@ fun RegisterScreen(
     val context = LocalContext.current
 
     LaunchedEffect(true) {
-        viewModel.goToMainSharedFlow.collect {
+        viewModel.goToLoginSharedFlow.collect {
             navController.navigate(it.route) {
                 popUpTo(it.route) {
                     inclusive = true
@@ -137,6 +137,8 @@ fun RegisterContent(
                 isPassword = true,
                 handleValue = { handleConfirm(it) }
             )
+            Spacer(modifier = Modifier.height(30.dp))
+
         }
 
 
