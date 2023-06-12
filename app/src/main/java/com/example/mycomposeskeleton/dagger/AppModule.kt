@@ -3,6 +3,7 @@ package com.example.mycomposeskeleton.dagger
 import android.content.Context
 import com.example.mycomposeskeleton.network.ApiRoutes
 import com.example.mycomposeskeleton.network.ApiService
+import com.example.mycomposeskeleton.network.ApiServiceCocktailDb
 import com.example.mycomposeskeleton.service.MySharedPref
 
 import com.squareup.moshi.Moshi
@@ -16,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -68,6 +70,7 @@ object AppModule {
 
     @Provides
     @Singleton
+    @Named("Auth")
     fun provideRetrofitClient(
         okHttp: OkHttpClient,
         moshi: Moshi
@@ -79,6 +82,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(@Named("Auth") retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    @Named("Drink")
+    fun provideRetrofitClient2(
+        okHttp: OkHttpClient,
+        moshi: Moshi
+    ): Retrofit = Retrofit.Builder()
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .client(okHttp)
+        .baseUrl(ApiRoutes.BASE_URL_ITEM)
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideApiService2(@Named("Drink") retrofit: Retrofit): ApiServiceCocktailDb = retrofit.create(ApiServiceCocktailDb::class.java)
 
 }

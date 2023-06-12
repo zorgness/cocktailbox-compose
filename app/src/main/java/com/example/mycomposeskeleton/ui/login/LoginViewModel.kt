@@ -29,7 +29,6 @@ class LoginViewModel @Inject constructor(
 
     enum class LoginState(val httpStatus: Int?) {
         SUCCESS(HTTP_200),
-        SECURITY_FAILURE(HTTP_304),
         ERROR_PARAM(ERROR_400),
         ERROR_CONNECTION(null),
         ERROR_SERVER(null),

@@ -63,6 +63,8 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 
+    /***** SYSTEM UI CONTROLLER *****/
+    //implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha")
     /***** SWIPE REFRESH *****/
     implementation 'com.google.accompanist:accompanist-swiperefresh:0.24.13-rc'
     /***** MATERIAL ICONS *****/
@@ -72,6 +74,7 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     /***** NAVIGATION COMPONENT *****/
     implementation 'androidx.navigation:navigation-compose:2.6.0-rc01'
+    //implementation"com.google.accompanist:accompanist-navigation-animation:0.16.1"
     /***** NAVIGATION COMPONENT HILT *****/
     implementation 'androidx.hilt:hilt-navigation-compose:1.1.0-alpha01'
     /***** MOSHI *****/

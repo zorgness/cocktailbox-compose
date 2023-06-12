@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,11 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.mycomposeskeleton.R
+import com.example.mycomposeskeleton.myanimation.addBrushEffect
 
 @Composable
 fun RegisterScreen(
@@ -75,6 +79,7 @@ fun RegisterScreen(
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun RegisterContent(
     context: Context,
@@ -94,21 +99,24 @@ fun RegisterContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(40.dp)
+            .padding(horizontal = 30.dp)
     ) {
         Text(
             text = context.getString(R.string.new_account),
             fontWeight = FontWeight.Bold,
+            color= Color.White,
             fontSize = 32.sp,
             modifier = Modifier
                 .align(Alignment.TopCenter)
+                .padding(top = 80.dp),
+            style = TextStyle(brush = addBrushEffect(10000))
         )
 
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(horizontal = 40.dp)
-                .padding(bottom = 140.dp),
+                .padding(horizontal = 30.dp)
+                .padding(bottom = 80.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -152,7 +160,7 @@ fun RegisterContent(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 40.dp),
+                    .padding(horizontal = 30.dp),
                 onClick = { handleClick() }
             ) {
                 Text(

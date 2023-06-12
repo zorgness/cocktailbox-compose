@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.example.mycomposeskeleton.ui.login.LoginViewModel
 import com.example.mycomposeskeleton.utils.Screen
 import com.example.mycomposeskeleton.R
+import com.example.mycomposeskeleton.myanimation.addBrushEffect
 
 @Composable
 fun LoginScreen(
@@ -47,7 +50,6 @@ fun LoginScreen(
                 LoginViewModel.LoginState.ERROR_CONNECTION -> R.string.error_connection
                 LoginViewModel.LoginState.WRONG_CREDENTIAL -> R.string.wrong_credentials
                 LoginViewModel.LoginState.EMPTY_FIELDS -> R.string.empty_fields
-                LoginViewModel.LoginState.SECURITY_FAILURE -> R.string.security_failure
                 LoginViewModel.LoginState.ERROR_PARAM -> R.string.error_param
                 LoginViewModel.LoginState.ERROR_SERVICE -> R.string.error_service
                 LoginViewModel.LoginState.SUCCESS -> R.string.login_success
@@ -70,6 +72,7 @@ fun LoginScreen(
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun LoginContent(
     context: Context,
@@ -84,23 +87,24 @@ fun LoginContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(40.dp)
+            .padding(horizontal = 30.dp)
     ) {
         Text(
-            text = context.getString(R.string.log_to_account),
+            text = context.getString(R.string.connect),
+            color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 32.sp,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-
-
+                .padding(top = 80.dp),
+            style = TextStyle(brush = addBrushEffect(10000))
         )
 
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(horizontal = 40.dp)
-                .padding(bottom = 140.dp),
+                .padding(horizontal = 30.dp)
+                .padding(bottom = 80.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -142,7 +146,10 @@ fun LoginContent(
 
             Text(
                 text = context.getString(R.string.no_account_yet),
-                modifier = Modifier.clickable { goToRegister() }
+                color = Color.White,
+                modifier = Modifier.clickable { goToRegister() },
+                maxLines = 2
+
             )
         }
     }

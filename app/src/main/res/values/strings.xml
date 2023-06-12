@@ -1,32 +1,43 @@
 <resources>
-    <string name="app_name">MyComposeSkeleton</string>
+    <string name="app_name">CocktailBox</string>
 
     <!--ERROR_NETWORK-->
-    <string name="error_server">erreur serveur</string>
-    <string name="error_authorization">probléme d\'autorisation</string>
-    <string name="error_connection">pas de connection</string>
-    <string name="error_param">probléme de paramétres</string>
-    <string name="error_service">service indisponible</string>
+    <string name="error_server">server not responding</string>
+    <string name="error_authorization">unauthorized</string>
+    <string name="error_connection">no connection</string>
+    <string name="error_param">parameter error</string>
+    <string name="error_service">unavailable service</string>
 
     <!--LOGIN REGISTER-->
-    <string name="wrong_credentials">mauvais login ou mot de passe</string>
-    <string name="empty_fields">tous les champs doivent être remplis</string>
-    <string name="error_confirmation">mot de passe différent de confirmation</string>
-    <string name="account_failed">nouveau compte non créé</string>
-    <string name="account_success">nouveau compte ajouté</string>
-    <string name="login_used">login déjà utilisé</string>
-    <string name="security_failure">probléme de sécurité, déconnectez-vous!!!</string>
+    <string name="wrong_credentials">wrong credentials</string>
+    <string name="empty_fields">fields can\'t be blank</string>
+    <string name="error_confirmation">password and comfirm not equals</string>
+    <string name="account_failed">account not created</string>
+    <string name="account_success">account created</string>
+    <string name="login_used">login already used</string>
 
-    <string name="new_account">Nouveau compte</string>
-    <string name="log_to_account">Connectez-vous</string>
+
+    <string name="new_account">New Account</string>
+    <string name="log_to_account">loggin</string>
     <string name="login">Login</string>
     <string name="email">Email</string>
-    <string name="username">Nom d\'utilisateur</string>
-    <string name="login_success">Bienvenue</string>
+    <string name="username">Username</string>
+    <string name="login_success">Welcome</string>
     <string name="password">Password</string>
-    <string name="confirm_password">Confirmation Password</string>
-    <string name="btn_register">S\'inscrire</string>
-    <string name="no_account_yet">Pas de compte ? inscrivez-vous !</string>
-    <string name="connect">Se connecter</string>
+    <string name="confirm_password">Confirm</string>
+    <string name="btn_register">Register</string>
+    <string name="no_account_yet">No account yet ? register here !</string>
+    <string name="connect">Connexion</string>
+
+   <!-- DRINK-->
+
+    <string name="cocktail_box">CocktailBox</string>
+    <string name="cocktails">Cocktails</string>
+    <string name="classics">Classics</string>
+    <string name="non_alcoolics">Non Alcoolic</string>
+    <string name="drink_not_found">drink not found</string>
+    <string name="search">Search</string>
+    <string name="enter_your_research">What are you looking for ?</string>
+
 
 </resources>
