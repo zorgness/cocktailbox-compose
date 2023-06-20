@@ -10,11 +10,9 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.HourglassFull
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +32,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.mycomposeskeleton.R
 import com.example.mycomposeskeleton.network.dto.DrinkDetail
+import com.example.mycomposeskeleton.ui.favorite.FavoriteViewModel
 import com.example.mycomposeskeleton.ui.theme.MyComposeSkeletonTheme
+import com.example.mycomposeskeleton.ui.theme.Purple500
 import com.example.mycomposeskeleton.utils.Screen
 
 
@@ -42,7 +42,8 @@ import com.example.mycomposeskeleton.utils.Screen
 fun DetailsScreen(
     navController: NavHostController,
     viewModel: DetailsViewModel,
-    drinkId: Long
+    drinkId: Long,
+    sharedViewModel : FavoriteViewModel
 ) {
 
     val drink by viewModel.drinkStateFlow.collectAsState()
@@ -55,7 +56,7 @@ fun DetailsScreen(
     }
 
 
-    LaunchedEffect(true ) {
+    LaunchedEffect(true) {
         viewModel.goToNotFoundScreen.collect {
             navController.navigate(it.route)
         }
@@ -64,8 +65,8 @@ fun DetailsScreen(
     LaunchedEffect(true) {
         viewModel.messageSharedFlow.collect { state ->
             when (state) {
-                DetailsViewModel.DetailsState.ERROR_SERVER-> R.string.error_server
-                DetailsViewModel.DetailsState.ERROR_CONNECTION-> R.string.error_connection
+                DetailsViewModel.DetailsState.ERROR_SERVER -> R.string.error_server
+                DetailsViewModel.DetailsState.ERROR_CONNECTION -> R.string.error_connection
                 DetailsViewModel.DetailsState.DRINK_NOT_FOUND -> R.string.drink_not_found
             }.let {
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -73,10 +74,22 @@ fun DetailsScreen(
         }
     }
 
+    var isFavorite by remember {
+        mutableStateOf(
+            sharedViewModel.checkIsFavorite(drinkId)
+        )
+    }
+
 
     DetailsContent(
         drink = drink,
-        list = ingredientsAndMeasuresList
+        list = ingredientsAndMeasuresList,
+        isFavorite = isFavorite,
+        onFavoriteClicked = {
+            sharedViewModel.setFavorite(it) {
+                isFavorite = !isFavorite
+            }
+        }
     )
 }
 
@@ -84,7 +97,9 @@ fun DetailsScreen(
 @Composable
 fun DetailsContent(
     drink: DrinkDetail?,
-    list: List<MutableList<String>>
+    list: List<MutableList<String>>,
+    isFavorite: Boolean = false,
+    onFavoriteClicked: (Long) -> Unit,
 ) {
 
     if (drink != null) {
@@ -92,107 +107,76 @@ fun DetailsContent(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .background(Color.Black)
+
         ) {
 
 
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(drink.strDrinkThumb)
-                    .crossfade(true)
-                    .build(),
-                error= painterResource(id = R.drawable.cocktail),
-                contentDescription = null,
-                contentScale= ContentScale.FillWidth,
-                modifier = Modifier.fillMaxWidth()
+                Box {
 
-            )
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(drink.strDrinkThumb)
+                            .crossfade(true)
+                            .build(),
+                        error = painterResource(id = R.drawable.cocktail),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.fillMaxSize().offset(y = 16.dp)
 
-            Column {
-                Text(
-                    text = drink.strDrink,
-                    modifier = Modifier.padding(20.dp) ,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 24.sp
-                )
-
-
-               /* val scroll = rememberScrollState(0)
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .horizontalScroll(scroll),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-
-                    Text(
-                        text= if((drink.strCategory ?: "")
-                                .contains("other", true)) "Other"
-                              else drink.strCategory ?: "" ,
-                        modifier = Modifier
-                            .border(
-                                1.dp,
-                                Color.White,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .background(
-                                Color.DarkGray,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .padding(8.dp),
-                        color = Color.White
                     )
 
-                    Text(
-                        text = drink.strAlcoholic ?: "",
+                    Icon(
+                        Icons.Outlined.Favorite,
+                        contentDescription = null,
                         modifier = Modifier
-                            .border(
-                                1.dp,
-                                Color.White,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .background(
-                                Color.DarkGray,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .padding(8.dp),
-                        color = Color.White
+                            .padding(top= 20.dp)
+                            .size(80.dp)
+                            .align(Alignment.TopEnd)
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.Black)
+                            .clickable {
+                                onFavoriteClicked(drink.idDrink.toLong())
+                            },
+                        tint = if(isFavorite) Purple500 else Color.White
                     )
 
-                  *//*  Text(
-                        text =  drink.strGlass ?: "",
-                        modifier = Modifier
-                            .border(
-                                1.dp,
-                                Color.White,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .background(
-                                Color.DarkGray,
-                                RoundedCornerShape(12.dp)
-                            )
-                            .padding(8.dp),
-                        color = Color.White
-                    )*//*
+
                 }
-*/
-                Text(text = "Ingredients",
-                    color = Color.White,
-                    modifier = Modifier.padding(20.dp),
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 20.sp
-                )
+
 
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-
+                        .background(
+                            Color.Black,
+                            shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                        )
+                        .clip(shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                 ) {
+                    Text(
+                        text = drink.strDrink,
+                        modifier = Modifier.padding(20.dp),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 24.sp
+                    )
+
+
+                    Text(
+                        text = "Ingredients",
+                        color = Color.White,
+                        modifier = Modifier.padding(20.dp),
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 20.sp
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+
+                        ) {
                         list[0].forEachIndexed { idx, value ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -202,7 +186,7 @@ fun DetailsContent(
                                     text = value,
                                     color = Color.White
                                 )
-                                if(list[0].count() == list[1].count()) {
+                                if (list[0].count() == list[1].count()) {
                                     Text(
                                         text = list[1][idx],
                                         color = Color.White
@@ -216,26 +200,33 @@ fun DetailsContent(
                                 1.dp
                             )
                         }
-               }
+                    }
 
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Text(
-                        text = "Instructions",
-                        modifier = Modifier.padding(bottom = 12.dp),
-                        color = Color.White,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp
-                    )
+                    Column(
+                        modifier = Modifier.padding(20.dp)
+                    ) {
+                        Text(
+                            text = "Instructions",
+                            modifier = Modifier.padding(bottom = 12.dp),
+                            color = Color.White,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp
+                        )
 
-                    Text(
-                        text = drink.strInstructions,
-                        color = Color.White
-                    )
+                        Text(
+                            text = drink.strInstructions,
+                            color = Color.White
+                        )
+                    }
                 }
+
             }
+
+
+
         }
-    }
+
 }
+
+
 

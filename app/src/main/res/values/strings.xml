@@ -7,6 +7,7 @@
     <string name="error_connection">no connection</string>
     <string name="error_param">parameter error</string>
     <string name="error_service">unavailable service</string>
+    <string name="token_expired">Token is expired</string>
 
     <!--LOGIN REGISTER-->
     <string name="wrong_credentials">wrong credentials</string>

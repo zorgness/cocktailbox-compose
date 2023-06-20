@@ -1,5 +1,6 @@
 package com.example.mycomposeskeleton.ui.favorite
 
+import ERROR_401
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,11 +9,10 @@ import com.example.mycomposeskeleton.network.ApiService
 import com.example.mycomposeskeleton.network.dto.FavoriteDto
 import com.example.mycomposeskeleton.network.dto.NewFavoriteDto
 import com.example.mycomposeskeleton.service.MySharedPref
+import com.example.mycomposeskeleton.ui.category.CategoryViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.forEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import toHydraUserId
@@ -26,7 +26,8 @@ class FavoriteViewModel @Inject constructor(
 
     enum class FavoriteState {
         ERROR_SERVER,
-        ERROR_CONNECTION
+        ERROR_CONNECTION,
+        TOKEN_EXPIRED
     }
 
     private val _favoriteUserList = MutableStateFlow(emptyList<FavoriteDto>())
@@ -35,6 +36,10 @@ class FavoriteViewModel @Inject constructor(
     private val headers = HashMap<String, String>()
     private var currentState: FavoriteState? = null
 
+    private val _messageSharedFlow = MutableSharedFlow<FavoriteState>()
+    val messageSharedFlow = _messageSharedFlow.asSharedFlow()
+
+
     init {
         fetchFavoritesUserList()
     }
@@ -42,8 +47,6 @@ class FavoriteViewModel @Inject constructor(
     fun checkIsFavorite(idDrink: Long): Boolean {
 
         val idList = _favoriteUserList.value.map { it.idDrink.toLong()}
-
-
         return idList.contains(idDrink)
     }
 
@@ -74,11 +77,17 @@ class FavoriteViewModel @Inject constructor(
                                 fetchFavoritesUserList()
                                 onCallback(true)
                             }
+
+                            response.code() == ERROR_401 ->
+                                currentState = FavoriteState.TOKEN_EXPIRED
                         }
                     }
 
                 } catch (e: Exception) {
                     currentState = FavoriteState.ERROR_CONNECTION
+                }
+                currentState?.let { state ->
+                    _messageSharedFlow.emit(state)
                 }
             }
         } else {
@@ -101,10 +110,17 @@ class FavoriteViewModel @Inject constructor(
                                 fetchFavoritesUserList()
                                 onCallback(true)
                             }
+
+                            response.code() == ERROR_401 ->
+                            currentState = FavoriteState.TOKEN_EXPIRED
                         }
                     }
                 } catch(e: Exception) {
                     currentState = FavoriteState.ERROR_CONNECTION
+                }
+
+                currentState?.let { state ->
+                    _messageSharedFlow.emit(state)
                 }
             }
         }
@@ -133,6 +149,10 @@ class FavoriteViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 currentState = FavoriteState.ERROR_CONNECTION
+            }
+
+            currentState?.let { state ->
+                _messageSharedFlow.emit(state)
             }
         }
     }

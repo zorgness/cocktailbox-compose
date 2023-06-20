@@ -1,4 +1,4 @@
-package com.example.mycomposeskeleton.ui.classic
+package com.example.mycomposeskeleton.ui.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +17,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class ClassicViewModel @Inject constructor(
+class CategoryViewModel @Inject constructor(
     private val apiServiceCocktailDb: ApiServiceCocktailDb,
 ): ViewModel() {
 
@@ -36,19 +36,17 @@ class ClassicViewModel @Inject constructor(
     private val _searchStrStateFlow = MutableStateFlow("")
     val searchStrStateFlow= _searchStrStateFlow.asStateFlow()
 
-    private val _classicSummaryListStateFlow = MutableStateFlow(emptyList<Drink>())
-    val classicSummaryListStateFlow = _classicSummaryListStateFlow.asStateFlow()
+    private val _listStateFlow = MutableStateFlow(emptyList<Drink>())
+    val listStateFlow = _listStateFlow.asStateFlow()
 
     private val _isListReadySharedFlow = MutableSharedFlow<Boolean>()
     val isListReadySharedFlow = _isListReadySharedFlow.asSharedFlow()
 
     private var currentState: ClassicState? = null
 
-    private var classicFullList = mutableListOf<Drink>()
+    private var fullList = mutableListOf<Drink>()
 
-    init {
-        fetchClassicsAll()
-    }
+
 
     fun updateSearchText(searchText: String) {
         _searchStrStateFlow.value = searchText
@@ -56,12 +54,12 @@ class ClassicViewModel @Inject constructor(
     }
 
     fun fetchDrinksToShow() {
-        _classicSummaryListStateFlow.value = classicFullList.filter { drink ->
+        _listStateFlow.value = fullList.filter { drink ->
             drink.strDrink.contains(searchStrStateFlow.value, true)
         }
     }
 
-    private fun fetchClassicsAll() {
+    private fun fetchDrinksByCategoryAll() {
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
@@ -74,7 +72,7 @@ class ClassicViewModel @Inject constructor(
                             currentState = ClassicState.ERROR_SERVER
 
                         response.isSuccessful && (body != null)-> {
-                            classicFullList.addAll(body.drinks)
+                            fullList.addAll(body.drinks)
                             _isPbVisibleStateFlow.value = false
                             _isListReadySharedFlow.emit(true)
                         }

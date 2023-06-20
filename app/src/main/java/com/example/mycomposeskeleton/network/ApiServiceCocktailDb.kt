@@ -25,6 +25,11 @@ interface ApiServiceCocktailDb {
         @Query("a") cat: String = "Non_Alcoholic"
     ): Response<ResponseGetCocktailListDto>?
 
+    @GET(ApiRoutes.GET_ALL_DRINKS)
+    suspend fun getDrinksByCategory(
+        @Query("a") cat: String
+    ): Response<ResponseGetCocktailListDto>?
+
     @GET(ApiRoutes.GET_COCKTAIL_BY_ID)
     suspend fun getDrinkById(
         @Query("i") id: Long

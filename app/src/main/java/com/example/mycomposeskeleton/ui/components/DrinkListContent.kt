@@ -30,6 +30,7 @@ fun DrinkListContent(
     title: String,
     searchText: String,
     isPbVisible: Boolean,
+    checkIsFavorite: (Long) -> Boolean,
     list: List<Drink>,
     handleItemClicked: (Long) -> Unit,
     handleSearch: (String) -> Unit,
@@ -78,9 +79,16 @@ fun DrinkListContent(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(16.dp),
                 content = {
+
                     items(list.size) { index ->
+                        val isFavorite by remember {
+                            mutableStateOf(
+                                checkIsFavorite(list[index].idDrink.toLong())
+                            )
+                        }
                         ItemDrink(
                             item = list[index],
+                            isFavorite = isFavorite,
                             onItemClicked = { handleItemClicked(it) },
                             onFavoriteClicked = { handleFavoriteClicked(it) },
                         )

@@ -32,13 +32,15 @@ import coil.request.ImageRequest
 import com.example.mycomposeskeleton.ui.theme.MyComposeSkeletonTheme
 import com.example.mycomposeskeleton.R
 import com.example.mycomposeskeleton.network.dto.Drink
+import com.example.mycomposeskeleton.ui.favorite.FavoriteViewModel
 import com.example.mycomposeskeleton.utils.Screen
 
 
 @Composable
 fun CocktailScreen(
     navController: NavHostController,
-    viewModel: CocktailViewModel
+    viewModel: CocktailViewModel,
+    sharedViewModel: FavoriteViewModel
 ) {
     val searchText by viewModel.searchStrStateFlow.collectAsState()
     val isPbVisible by viewModel.isPbVisibleStateFlow.collectAsState()
@@ -67,11 +69,19 @@ fun CocktailScreen(
         title = context.getString(R.string.cocktails),
         searchText = searchText,
         isPbVisible = isPbVisible,
+        checkIsFavorite = { drinkId ->
+            sharedViewModel.checkIsFavorite(drinkId)
+        },
         list = cocktailSummaryList,
         handleItemClicked = { drinkId->
             navController.navigate(Screen.Details.route + "/$drinkId" )
         },
         handleSearch = { viewModel.updateSearchText(it) },
-        handleFavoriteClicked = {}
+        handleFavoriteClicked = { drinkId ->
+            sharedViewModel.setFavorite(drinkId) { isSet ->
+                if(isSet)
+                    viewModel.fetchCocktailsToShow()
+            }
+        }
     )
 }

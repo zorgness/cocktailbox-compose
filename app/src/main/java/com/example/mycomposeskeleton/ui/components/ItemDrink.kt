@@ -66,7 +66,7 @@ fun ItemDrink(
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color.Gray)
+                        .background(Color.Black)
                         .clickable {
                             onFavoriteClicked(item.idDrink.toLong())
                         },

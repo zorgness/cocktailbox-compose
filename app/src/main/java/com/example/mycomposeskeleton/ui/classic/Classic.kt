@@ -6,13 +6,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.example.mycomposeskeleton.R
+import com.example.mycomposeskeleton.ui.favorite.FavoriteViewModel
 import com.example.mycomposeskeleton.utils.Screen
 
 
 @Composable
 fun ClassicScreen(
     navController: NavHostController,
-    viewModel: ClassicViewModel
+    viewModel: ClassicViewModel,
+    sharedViewModel: FavoriteViewModel
 ) {
     val searchText by viewModel.searchStrStateFlow.collectAsState()
     val isPbVisible by viewModel.isPbVisibleStateFlow.collectAsState()
@@ -41,11 +43,18 @@ fun ClassicScreen(
         title = context.getString(R.string.classics),
         searchText = searchText,
         isPbVisible = isPbVisible,
+        checkIsFavorite = { drinkId ->
+            sharedViewModel.checkIsFavorite(drinkId)
+        },
         list = classicSummaryList,
         handleItemClicked = { drinkId->
             navController.navigate(Screen.Details.route + "/$drinkId" )
         },
         handleSearch = { viewModel.updateSearchText(it) },
-        handleFavoriteClicked = {}
+        handleFavoriteClicked = {drinkId ->
+            sharedViewModel.setFavorite(drinkId) {
+                viewModel.fetchDrinksToShow()
+            }
+        }
     )
 }

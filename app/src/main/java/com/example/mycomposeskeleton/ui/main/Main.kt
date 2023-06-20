@@ -73,6 +73,18 @@ fun MainScreen(
     }
 
     LaunchedEffect(true) {
+        sharedViewModel.messageSharedFlow.collect { state ->
+            when (state) {
+                FavoriteViewModel.FavoriteState.ERROR_SERVER -> R.string.error_server
+                FavoriteViewModel.FavoriteState.ERROR_CONNECTION -> R.string.error_connection
+                FavoriteViewModel.FavoriteState.TOKEN_EXPIRED -> R.string.token_expired
+            }.let {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    LaunchedEffect(true) {
         with(viewModel) {
             fetchCocktailsAll()
             fetchOrdinariesAll()

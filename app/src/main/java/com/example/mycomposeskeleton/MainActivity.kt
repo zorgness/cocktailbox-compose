@@ -99,19 +99,31 @@ fun AppNavigation() {
         composable(Screen.Cocktail.route) {
             val cocktailViewModel: CocktailViewModel = hiltViewModel()
             CategoryTransition {
-                CocktailScreen(navController, cocktailViewModel)
+                CocktailScreen(
+                    navController,
+                    cocktailViewModel,
+                    sharedViewModel
+                )
             }
         }
         composable(Screen.Classic.route) {
             val classicViewModel: ClassicViewModel = hiltViewModel()
             CategoryTransition {
-                ClassicScreen(navController, classicViewModel)
+                ClassicScreen(
+                    navController,
+                    classicViewModel,
+                    sharedViewModel
+                )
             }
         }
         composable(Screen.NonAlcoolic.route) {
             val nonAlcoolicViewModel: NonAlcoolicViewModel = hiltViewModel()
             CategoryTransition {
-                NonAlcoolicScreen(navController, nonAlcoolicViewModel)
+                NonAlcoolicScreen(
+                    navController,
+                    nonAlcoolicViewModel,
+                    sharedViewModel
+                )
             }
         }
         composable(
@@ -125,7 +137,12 @@ fun AppNavigation() {
             val detailsViewModel: DetailsViewModel = hiltViewModel()
             val cocktailId = it.arguments?.getLong("cocktailId") ?: 0L
             DetailsTransition{
-                DetailsScreen( navController, detailsViewModel, cocktailId)
+                DetailsScreen(
+                    navController,
+                    detailsViewModel,
+                    cocktailId,
+                    sharedViewModel
+                )
             }
         }
         composable(Screen.NotFound.route) {

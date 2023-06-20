@@ -5,13 +5,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.example.mycomposeskeleton.R
+import com.example.mycomposeskeleton.ui.favorite.FavoriteViewModel
 import com.example.mycomposeskeleton.utils.Screen
 
 
 @Composable
 fun NonAlcoolicScreen(
     navController: NavHostController,
-    viewModel: NonAlcoolicViewModel
+    viewModel: NonAlcoolicViewModel,
+    sharedViewModel: FavoriteViewModel
 ) {
     val searchText by viewModel.searchStrStateFlow.collectAsState()
     val isPbVisible by viewModel.isPbVisibleStateFlow.collectAsState()
@@ -40,11 +42,18 @@ fun NonAlcoolicScreen(
         title = context.getString(R.string.non_alcoolics),
         searchText = searchText,
         isPbVisible = isPbVisible,
+        checkIsFavorite = { drinkId ->
+            sharedViewModel.checkIsFavorite(drinkId)
+        },
         list = nonAlcoolicSummaryList,
         handleItemClicked = { drinkId->
             navController.navigate(Screen.Details.route + "/$drinkId" )
         },
         handleSearch = { viewModel.updateSearchText(it) },
-        handleFavoriteClicked = {}
+        handleFavoriteClicked = { drinkId ->
+            sharedViewModel.setFavorite(drinkId) {
+                viewModel.fetchDrinksToShow()
+            }
+        }
     )
 }
